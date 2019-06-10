@@ -1,8 +1,8 @@
 # First Version of Prop Hunt for UT! 
+## Moddb Page: [Moddb Page](https://www.moddb.com/mods/prophunt-for-ut99)
+
+# Change Notes
 ## version 1.1.0 alpha
-
-# Moddb Page: [Moddb Page](https://www.moddb.com/mods/prophunt-for-ut99)
-
 ### June 10, 2019
 * Added better documentation for code.
 * Fixed read me
@@ -25,6 +25,7 @@ Please feel free to test the hell out of this and find any bugs, you can look th
 
 * BOTS ARE REALLY WHACKY IN THIS GAME MODE <, better AI coming soon.
 
+# RULES
 
 * Two teams, hunters versus hiders. Hunters need to persue hider players disguised as props though every miss with the hunter weapon is a health penalty, so make sure you shoot wisely!
 
@@ -32,10 +33,11 @@ Please feel free to test the hell out of this and find any bugs, you can look th
 
 * Though, hiders have a disadvantge, when standing still for a while, their health slowly reduces. Hiders must use their surroundings to blend into the environment and avoid the hunters to stay alive! At the end of every round, teams switch sides to take turns being hiders and hunters. 
 
-# Stay hidden or die trying!
 
-## Configurable Variables:
+## Configurable Variables in PropHunt.ini
 * HunterHealth - How much health hunters start with, keep in mind that for each kill a hunter gets, they gain a third this amount for every kill. default=200
 * HiderHealth - How much health the hiders have to start, recommend keeping this around default. default=50
 * RoundTime - Length in minutes for each round ( not including Hide Time ). default=2
 * RoundsToWin - The team goal to get to for their team to win the game. default=7
+
+# Stay hidden or die trying!
