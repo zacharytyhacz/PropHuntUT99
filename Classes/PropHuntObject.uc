@@ -26,6 +26,7 @@ function Timer()
 		Prop.Destroy();
 		Prop = None;
 	}
+	// debug 
 	Log("))))))))))))))))))))))))))))))))))))))))))))))))))))))))"@Owner@Prop);
 }
 

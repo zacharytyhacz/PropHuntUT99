@@ -1,5 +1,7 @@
 class PropHuntWeapon extends Minigun2;
 
+// this is the hunter weapon;
+// if hit object is not a player, give owner damage
 function ProcessTraceHit(Actor Other, Vector HitLocation, Vector HitNormal, Vector X, Vector Y, Vector Z)
 {
 	Super.ProcessTraceHit(Other,HitLocation,HitNormal,X,Y,Z);

@@ -43,6 +43,8 @@ var bool			bRoundStarted;
 
 var Decoration Props[];
 
+// create default hide time and round time 
+// set remaining time for round
 function PreBeginPlay()
 {
 	Super.PreBeginPlay();
@@ -57,6 +59,7 @@ function PreBeginPlay()
 	RemainingRoundTime = RoundTime*60+HideTime;
 }
 
+// deprecated.
 function CheckReady() // original function creates timelimit if fraglimit and timelimit both equal zero
 {
 	if(FragLimit != 0) 
@@ -65,6 +68,7 @@ function CheckReady() // original function creates timelimit if fraglimit and ti
 		TimeLimit = 0;
 }
 
+// set up teams
 function PostBeginPlay()
 {
 	local int i;
@@ -81,6 +85,8 @@ function PostBeginPlay()
 	Super.PostBeginPlay();
 }
 
+
+// Destroy all inventory on ground
 function InitGame(string Options, out string Error)
 {
 	local Inventory inv;
@@ -90,6 +96,7 @@ function InitGame(string Options, out string Error)
 	}
 }
 
+// toggle visibility on props
 simulated function HideProps(bool bHide)
 {
 	local int i;
@@ -100,6 +107,8 @@ simulated function HideProps(bool bHide)
 	}
 }
 
+
+// Initial use of prop hunt GRI
 function InitGameReplicationInfo()
 {
 	InitPHGameReplicationInfo();
@@ -118,6 +127,8 @@ function InitPHGameReplicationInfo()
 	PropHuntGRI(GameReplicationInfo).RoundTime = RoundTime;
 	PropHuntGRI(GameReplicationInfo).HideTime = HideTime;
 	PropHuntGRI(GameReplicationInfo).RemainingRoundTime = RemainingRoundTime;
+
+	// for debugging
 	log("_____________________________");
 	log("| PROP HUNT SETTINGS LOADED |");
 	log("CurrentHiderTeam = "@ CurrentHiderTeam);
@@ -134,23 +145,30 @@ function InitPHGameReplicationInfo()
 	log("_____________________________");
 }
 
+// process a new player logging in
 event PostLogin( playerpawn NewPlayer )
 {
 	Super.PostLogin(NewPlayer);
 
+	// if round hasn't started, player can start playing
 	if(!bRoundStarted){
 		if ( (NewPlayer != None) && !NewPlayer.IsA('Spectator') && !NewPlayer.IsA('Commander') ){
 			NewPlayer.PlayerReplicationInfo.Score = 1;
 			AddDefaultInventory(NewPlayer);
 		}
 	} else {
+		// Send to spectating
 		NewPlayer.PlayerReplicationInfo.Score = 0;
 		NewPlayer.PlayerRestartState = 'PlayerSpectating';
-		RestartPlayer(NewPlayer); // in restart player, since their score is 0, they'll be kicked into a temporary spectate mode until round is over.	
+
+		// in restart player, since their score is 0, they'll be kicked into a temporary spectate mode until round is over.	
+		RestartPlayer(NewPlayer); 
 		DiscardInventory(NewPlayer);
 	}
 }
 
+// check if restarting game
+// start a round 
 simulated function StartMatch()
 {
 	local TimedTrigger T;
@@ -174,6 +192,7 @@ simulated function StartMatch()
 	bStartMatch = false;
 }
 
+// end of a round processsing
 simulated function RestartPlayers()
 {
 	local int i;
@@ -205,6 +224,8 @@ simulated function RestartPlayers()
 	}
 }
 
+// start of a new round
+// set up initial hunter and hider condition for hide time 
 simulated function StartRound()
 {
 	local PropHunt_Prop pp;
@@ -263,6 +284,7 @@ simulated function StartRound()
 	}
 }
 
+// give the hunter and hide weapons
 function AddDefaultInventory( pawn PlayerPawn )
 {
 	local inventory Inv;
@@ -287,6 +309,7 @@ function AddDefaultInventory( pawn PlayerPawn )
 	}
 }
 
+// when a player dies, process what happens to their state
 function bool RestartPlayer( pawn aPlayer )	
 {
 	local NavigationPoint startSpot;
@@ -361,6 +384,7 @@ function bool RestartPlayer( pawn aPlayer )
 	return foundStart;
 }
 
+// process hide time and round time
 simulated function Timer()
 {
 	local Pawn P;
@@ -510,6 +534,7 @@ simulated function Timer()
 	
 }
 
+// when hide time is over, release hunters
 simulated function ReleaseHunters()
 {
 	local Pawn P;
@@ -532,6 +557,7 @@ simulated function ReleaseHunters()
 	HideProps(false); // unhide props
 }
 
+// calculate the displayed score based on players alive on each time
 function CalcTeamScores()
 {
 	local Pawn P;
@@ -545,6 +571,7 @@ function CalcTeamScores()
 	}
 }
 
+// set up the ending game camera for the winning hunter or hider
 function bool SetEndCams(string Reason)
 {
 	local pawn P,Best;
@@ -575,6 +602,7 @@ function bool SetEndCams(string Reason)
     return true;
 }
 
+// decide if was last round and game offically ended
 function RestartGame()
 {
 	local int i;
@@ -584,6 +612,7 @@ function RestartGame()
 	Super.RestartGame();
 }
 
+// check if round is over by comparing time and hiders&hunters alive
 function CheckEndRound()
 {
 	if(bRoundStarted){
@@ -603,6 +632,7 @@ function AddToTeam(int num, Pawn Other)
 	Super.AddToTeam(num,Other);
 }
 
+// absolute end of the game.
 function EndGame( string Reason)
 {
 	EndTime = Level.TimeSeconds + 10;
@@ -611,6 +641,10 @@ function EndGame( string Reason)
 	Super.EndGame(Reason);
 }
 
+
+// finish a round and decide who winner team is
+// swap teams 
+// check if was last round
 function EndRound( string Reason)
 {
 	local string final_end_reason;
@@ -640,6 +674,7 @@ function EndRound( string Reason)
 	}
 }
 
+// reset entire game
 static function ResetGame()
 {
 	Default.TeamWins[0] = 0;
@@ -650,6 +685,7 @@ static function ResetGame()
 	StaticSaveConfig();
 }
 
+// apply prop hunt player replication info
 event playerpawn Login
 (
 	string Portal,
@@ -670,6 +706,7 @@ event playerpawn Login
 	return NewPlayer;
 }
 
+// remove PRI
 function Logout( pawn Exiting )
 {
 	local int i;
@@ -684,6 +721,8 @@ function Logout( pawn Exiting )
 	}
 	Super.Logout(Exiting);
 }
+
+// get stats for a playerpawn
 function PropHuntPRI GetStats(playerpawn p)
 {
 	local int i;
@@ -696,6 +735,7 @@ function PropHuntPRI GetStats(playerpawn p)
 	}
 }
 
+// process a kill
 function ScoreKill(pawn Killer, pawn Other)
 {
 	Other.DieCount++;
@@ -709,6 +749,7 @@ function ScoreKill(pawn Killer, pawn Other)
 	BaseMutator.ScoreKill(Killer, Other);
 }	
 
+// broadcast message about some one killed
 function Killed(pawn killer, pawn Other, name damageType)
 {
 	local int NextTaunt, i;
@@ -768,6 +809,7 @@ function Killed(pawn killer, pawn Other, name damageType)
         RateVs(Other, Killer);
 }
 
+// stops teams from having incorrect weapon
 function bool PickupQuery( Pawn Other, Inventory item )
 {
 	if ( Other.PlayerReplicationInfo.Team == CurrentHiderTeam)
@@ -776,7 +818,7 @@ function bool PickupQuery( Pawn Other, Inventory item )
 		return Super.PickupQuery( Other, item );
 }
 
-
+// displays first join message
 function ShowTeamMessage(PlayerPawn theplayer)
 {
 	theplayer.ClearProgressMessages();
@@ -788,6 +830,7 @@ function ShowTeamMessage(PlayerPawn theplayer)
 	theplayer.SetProgressColor(class'ChallengeTeamHUD'.Default.TeamColor[theplayer.PlayerReplicationInfo.Team], 0);
 }
 
+// show if hide / hunter
 function PlayStartUpMessage(PlayerPawn NewPlayer)
 {
 	local int i;
@@ -818,6 +861,8 @@ function PlayStartUpMessage(PlayerPawn NewPlayer)
 	if ( Level.NetMode == NM_Standalone )
 		NewPlayer.SetProgressMessage(SingleWaitingMessage, i++);
 }
+
+// ==========================================
 /// A.I.
 
 function ModifyBehaviour(Bot NewBot)
