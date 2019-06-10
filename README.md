@@ -1,14 +1,14 @@
-#First Version of Prop Hunt for UT! 
-##version 1.1.0 alpha
+# First Version of Prop Hunt for UT! 
+## version 1.1.0 alpha
 
-#Moddb Page: [Moddb Page](https://www.moddb.com/mods/prophunt-for-ut99)
+# Moddb Page: [Moddb Page](https://www.moddb.com/mods/prophunt-for-ut99)
 
-###June 10, 2019
+### June 10, 2019
 * Added better documentation for code.
 * Fixed read me
 
 
-###May 2, 2018
+### May 2, 2018
 * Added rules menu before starting a game 
 * Hider Selector allows behind view ( right click ) 
 * Hider Selector now has accurate prop ownership, sticks to ground.
@@ -34,7 +34,7 @@ Please feel free to test the hell out of this and find any bugs, you can look th
 
 # Stay hidden or die trying!
 
-##Configurable Variables:
+## Configurable Variables:
 * HunterHealth - How much health hunters start with, keep in mind that for each kill a hunter gets, they gain a third this amount for every kill. default=200
 * HiderHealth - How much health the hiders have to start, recommend keeping this around default. default=50
 * RoundTime - Length in minutes for each round ( not including Hide Time ). default=2
